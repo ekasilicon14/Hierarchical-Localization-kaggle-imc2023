@@ -51,7 +51,7 @@ class NetVLAD(BaseModel):
     # https://github.com/uzh-rpg/netvlad_tf_open/blob/master/matlab/net_class2struct.m.
     dir_models = {
         'Pitts30K_struct': '/kaggle/input/hloc-netvlad-weights/Pitts30K_struct.mat',
-        'TokyoTM_struct.mat': '/kaggle/input/hloc-netvlad-weights/TokyoTM_struct.mat'
+        'TokyoTM_struct': '/kaggle/input/hloc-netvlad-weights/TokyoTM_struct.mat'
     }
 
     def _init(self, conf):
