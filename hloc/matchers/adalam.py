@@ -10,7 +10,7 @@ class AdaLAM(BaseModel):
     # See https://kornia.readthedocs.io/en/latest/_modules/kornia/feature/adalam/adalam.html.
     default_conf = {
         'area_ratio': 100,
-        'search_expansion': 4,
+        'search_expansion': 16,
         'ransac_iters': 128,
         'min_inliers': 6,
         'min_confidence': 200,
