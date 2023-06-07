@@ -42,7 +42,7 @@ class NetVLADLayer(nn.Module):
 
 class NetVLAD(BaseModel):
     default_conf = {
-        'model_name': 'VGG16-NetVLAD-Pitts30K',
+        'model_name': 'Pitts30K_struct',
         'whiten': True
     }
     required_inputs = ['image']
@@ -50,8 +50,8 @@ class NetVLAD(BaseModel):
     # Models exported using
     # https://github.com/uzh-rpg/netvlad_tf_open/blob/master/matlab/net_class2struct.m.
     dir_models = {
-        'VGG16-NetVLAD-Pitts30K': '/kaggle/input/hloc-netvlad-weights/Pitts30K_struct.mat',
-        'VGG16-NetVLAD-TokyoTM': '/kaggle/input/hloc-netvlad-weights/TokyoTM_struct.mat'
+        'Pitts30K_struct': '/kaggle/input/hloc-netvlad-weights/Pitts30K_struct.mat',
+        'TokyoTM_struct.mat': '/kaggle/input/hloc-netvlad-weights/TokyoTM_struct.mat'
     }
 
     def _init(self, conf):
