@@ -20,7 +20,8 @@ class LoFTR(BaseModel):
     def _init(self, conf):
         cfg = default_cfg
         cfg['match_coarse']['thr'] = conf['match_threshold']
-        self.net = LoFTR_(pretrained=conf['weights'], config=cfg)
+        self.net = LoFTR_(pretrained=None, config=cfg)
+        self.net.load_state_dict(torch.load(f'/kaggle/input/loftr/pytorch/outdoor/1/loftr_outdoor.ckpt')['state_dict'])
 
     def _forward(self, data):
         # For consistency with hloc pairs, we refine kpts in image0!
