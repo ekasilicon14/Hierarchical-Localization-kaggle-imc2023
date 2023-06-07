@@ -210,7 +210,7 @@ class ImagePairDataset(torch.utils.data.Dataset):
         size_new = tuple(map(
                 lambda x: int(x // self.conf.dfactor * self.conf.dfactor),
                 image.shape[-2:]))
-        image = F.resize(image, size=size_new)
+        image = F.resize(image, size=size_new, antialias=True)
         scale = np.array(size) / np.array(size_new)[::-1]
         return image, scale
 
@@ -243,7 +243,7 @@ def match_dense(conf: Dict,
 
     dataset = ImagePairDataset(image_dir, conf["preprocessing"], pairs)
     loader = torch.utils.data.DataLoader(
-            dataset, num_workers=16, batch_size=1, shuffle=False)
+            dataset, num_workers=2, batch_size=1, shuffle=False)
 
     logger.info("Performing dense matching...")
     with h5py.File(str(match_path), 'a') as fd:

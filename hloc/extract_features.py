@@ -46,6 +46,17 @@ confs = {
             'resize_max': 1600,
         },
     },
+    'keynet': {
+        'output': 'feats-keynet',
+        'model': {
+            'name': 'keynet',
+            'max_keypoints': 10000,
+        },
+        'preprocessing': {
+            'grayscale': False,
+            'resize_max': 1600,
+        },
+    },
     # Global descriptors
     'netvlad': {
         'output': 'global-feats-netvlad',
