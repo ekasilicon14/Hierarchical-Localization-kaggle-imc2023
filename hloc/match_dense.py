@@ -67,21 +67,6 @@ confs = {
         'max_error': 2,  # max error for assigned keypoints (in px)
         'cell_size': 8,  # size of quantization patch (max 1 kp/patch)
     },
-    # Use for matching superpoint feats with loftr
-    'loftr_superpoint': {
-        'output': 'matches-loftr_aachen',
-        'model': {
-            'name': 'loftr',
-            'weights': 'outdoor'
-        },
-        'preprocessing': {
-            'grayscale': True,
-            'resize_max': 1024,
-            'dfactor': 8
-        },
-        'max_error': 4,  # max error for assigned keypoints (in px)
-        'cell_size': 4,  # size of quantization patch (max 1 kp/patch)
-    },
 }
 
 

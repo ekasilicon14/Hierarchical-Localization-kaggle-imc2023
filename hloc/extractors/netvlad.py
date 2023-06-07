@@ -50,22 +50,14 @@ class NetVLAD(BaseModel):
     # Models exported using
     # https://github.com/uzh-rpg/netvlad_tf_open/blob/master/matlab/net_class2struct.m.
     dir_models = {
-        'VGG16-NetVLAD-Pitts30K': 'https://cvg-data.inf.ethz.ch/hloc/netvlad/Pitts30K_struct.mat',
-        'VGG16-NetVLAD-TokyoTM': 'https://cvg-data.inf.ethz.ch/hloc/netvlad/TokyoTM_struct.mat'
+        'VGG16-NetVLAD-Pitts30K': '/kaggle/input/hloc-netvlad-weights/Pitts30K_struct.mat',
+        'VGG16-NetVLAD-TokyoTM': '/kaggle/input/hloc-netvlad-weights/TokyoTM_struct.mat'
     }
 
     def _init(self, conf):
         assert conf['model_name'] in self.dir_models.keys()
 
-        # Download the checkpoint.
-        checkpoint = Path(
-            torch.hub.get_dir(), 'netvlad', conf['model_name'] + '.mat')
-        if not checkpoint.exists():
-            checkpoint.parent.mkdir(exist_ok=True, parents=True)
-            link = self.dir_models[conf['model_name']]
-            cmd = ['wget', link, '-O', str(checkpoint)]
-            logger.info(f'Downloading the NetVLAD model with `{cmd}`.')
-            subprocess.run(cmd, check=True)
+        checkpoint = Path('/kaggle/input/hloc-netvlad-weights', conf['model_name'] + '.mat')
 
         # Create the network.
         # Remove classification head.
