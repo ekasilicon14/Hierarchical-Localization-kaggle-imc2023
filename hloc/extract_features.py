@@ -111,11 +111,11 @@ confs = {
         'output': 'feats-keynet',
         'model': {
             'name': 'keynet',
-            'max_keypoints': 16000,
+            'max_keypoints': 10000,
         },
         'preprocessing': {
             'grayscale': False,
-            'resize_max': 1650,
+            'resize_max': 1600,
         },
     },
     'disk': {
