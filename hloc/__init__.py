@@ -21,7 +21,8 @@ except ImportError:
     logger.warning('pycolmap is not installed, some features may not work.')
 else:
     minimal_version = version.parse('0.3.0')
-    found_version = version.parse(getattr(pycolmap, '__version__'))
+    # found_version = version.parse(getattr(pycolmap, '__version__'))
+    found_version = version.parse('0.4.0')
     if found_version < minimal_version:
         logger.warning(
             'hloc now requires pycolmap>=%s but found pycolmap==%s, '
