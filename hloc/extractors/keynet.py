@@ -8,7 +8,7 @@ import kornia as K
 
 from ..utils.base_model import BaseModel
 
-class KeyNetAffNetHardNet(KF.LocalFeature):
+class KeyNetAffNetHardNetLayers(KF.LocalFeature):
     def __init__(
         self,
         num_features: int = 5000,
@@ -34,7 +34,7 @@ class KeyNetAffNetHardNet(KF.LocalFeature):
         descriptor = KF.LAFDescriptor(hardnet, patch_size=32, grayscale_descriptor=True).to(device)
         super().__init__(detector, descriptor, scale_laf)
 
-class DISK(BaseModel):
+class KeyNetAffNetHardNet(BaseModel):
     default_conf = {
         'max_keypoints': 10000,
         'upright': False,
@@ -44,7 +44,7 @@ class DISK(BaseModel):
     required_inputs = ['image']
 
     def _init(self, conf):
-        self.feature = KeyNetAffNetHardNet(conf['max_keypoints'], conf['upright'], 'cuda').to('cuda').eval()
+        self.feature = KeyNetAffNetHardNetLayers(conf['max_keypoints'], conf['upright'], 'cuda').to('cuda').eval()
         self.resize_small_edge_to = conf['resize_small_edge_to']
 
     def _forward(self, data):
