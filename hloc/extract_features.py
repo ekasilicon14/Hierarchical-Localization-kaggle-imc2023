@@ -54,7 +54,7 @@ confs = {
         },
         'preprocessing': {
             'grayscale': False,
-            'resize_max': 1650,
+            'resize_max': 1600,
         },
     },
     # Global descriptors
