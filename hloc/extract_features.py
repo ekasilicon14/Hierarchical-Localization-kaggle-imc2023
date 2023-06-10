@@ -85,14 +85,11 @@ def resize_image(image, size, interp):
 
 def rotate_image(image, angle):
     if(angle>=45 and angle<135):
-        rotated = cv2.transpose(image)
-        rotated = cv2.flip(rotated,flipCode=1)
+        rotated = cv2.flip(cv2.transpose(image),flipCode=1)
     elif(angle<=-45 and angle>-135):
-        rotated = cv2.transpose(image)
-        rotated = cv2.flip(rotated,flipCode=0)
+        rotated = cv2.flip(cv2.transpose(image),flipCode=0)
     elif(angle>=135 or angle<=-135):
-        rotated = cv2.flip(image,flipCode=1)
-        rotated = cv2.flip(rotated,flipCode=0)
+        rotated = cv2.flip(cv2.flip(image,flipCode=1),flipCode=0)
     else:
         rotated = image
 
@@ -201,7 +198,7 @@ def main(conf: Dict,
     model = Model(conf['model']).eval().to(device)
 
     loader = torch.utils.data.DataLoader(
-        dataset, num_workers=1, shuffle=False, pin_memory=True)
+        dataset, num_workers=2, shuffle=False, pin_memory=True)
     for idx, data in enumerate(tqdm(loader)):
         name = dataset.names[idx]
         pred = model({'image': data['image'].to(device, non_blocking=True)})
