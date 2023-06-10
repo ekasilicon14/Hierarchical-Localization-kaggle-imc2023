@@ -35,7 +35,10 @@ class DoG(BaseModel):
 
     def _init(self, conf):
         if conf['descriptor'] == 'sosnet':
-            self.describe = kornia.feature.SOSNet(pretrained=True)
+            self.describe = kornia.feature.SOSNet(pretrained=False)
+            sosnet_weight_path = f'/kaggle/input/kornia-local-feature-weights/sosnet_32x32_liberty.pth'
+            sosnet_weights = torch.load(sosnet_weight_path)
+            self.describe.load_state_dict(sosnet_weights)
         elif conf['descriptor'] == 'hardnet':
             self.describe = kornia.feature.HardNet(pretrained=True)
         elif conf['descriptor'] not in ['sift', 'rootsift']:
