@@ -83,6 +83,21 @@ def resize_image(image, size, interp):
             f'Unknown interpolation {interp}.')
     return resized
 
+def rotate_image(image, angle):
+    if(angle>=45 and angle<135):
+        rotated = cv2.transpose(image)
+        rotated = cv2.flip(rotated,flipCode=1)
+    elif(angle<=-45 and angle>-135):
+        rotated = cv2.transpose(image)
+        rotated = cv2.flip(rotated,flipCode=0)
+    elif(angle>=135 or angle<=-135):
+        rotated = cv2.flip(image,flipCode=1)
+        rotated = cv2.flip(rotated,flipCode=0)
+    else:
+        rotated = image
+
+    return rotated
+
 
 class ImageDataset(torch.utils.data.Dataset):
     default_conf = {
@@ -93,9 +108,14 @@ class ImageDataset(torch.utils.data.Dataset):
         'interpolation': 'cv2_area',  # pil_linear is more accurate but slower
     }
 
-    def __init__(self, root, conf, paths=None):
+    def __init__(self, root, conf, paths=None, orientations=None):
         self.conf = conf = SimpleNamespace(**{**self.default_conf, **conf})
         self.root = root
+
+        if orientations is not None:
+            self.orientations = orientations
+        else:
+            self.orientations = None
 
         if paths is None:
             paths = []
@@ -123,6 +143,11 @@ class ImageDataset(torch.utils.data.Dataset):
     def __getitem__(self, idx):
         name = self.names[idx]
         image = read_image(self.root / name, self.conf.grayscale)
+
+        if self.orientations is not None:
+            if name in self.orientations:
+                image = rotate_image(image,self.orientations[name])
+
         image = image.astype(np.float32)
         size = image.shape[:2][::-1]
 
@@ -155,11 +180,12 @@ def main(conf: Dict,
          as_half: bool = True,
          image_list: Optional[Union[Path, List[str]]] = None,
          feature_path: Optional[Path] = None,
-         overwrite: bool = False) -> Path:
+         overwrite: bool = False,
+         orientations: Optional[dict] = None) -> Path:
     logger.info('Extracting local features with configuration:'
                 f'\n{pprint.pformat(conf)}')
 
-    dataset = ImageDataset(image_dir, conf['preprocessing'], image_list)
+    dataset = ImageDataset(image_dir, conf['preprocessing'], image_list, orientations)
     if feature_path is None:
         feature_path = Path(export_dir, conf['output']+'.h5')
     feature_path.parent.mkdir(exist_ok=True, parents=True)
