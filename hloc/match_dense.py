@@ -17,7 +17,7 @@ from . import matchers, logger
 from .utils.base_model import dynamic_load
 from .utils.parsers import parse_retrieval, names_to_pair
 from .match_features import find_unique_new_pairs
-from .extract_features import read_image, resize_image
+from .extract_features import read_image, resize_image, rotate_image
 from .utils.io import list_h5_names
 
 
@@ -173,10 +173,15 @@ class ImagePairDataset(torch.utils.data.Dataset):
         'cache_images': False,
     }
 
-    def __init__(self, image_dir, conf, pairs):
+    def __init__(self, image_dir, conf, pairs, orientations):
         self.image_dir = image_dir
         self.conf = conf = SimpleNamespace(**{**self.default_conf, **conf})
         self.pairs = pairs
+        if orientations is not None:
+            self.orientations = orientations
+        else:
+            self.orientations = None
+
         if self.conf.cache_images:
             image_names = set(sum(pairs, ()))  # unique image names in pairs
             logger.info(
@@ -185,9 +190,13 @@ class ImagePairDataset(torch.utils.data.Dataset):
             self.scales = {}
             for name in tqdm(image_names):
                 image = read_image(self.image_dir / name, self.conf.grayscale)
-                self.images[name], self.scales[name] = self.preprocess(image)
+                self.images[name], self.scales[name] = self.preprocess(image, name, orientations)
 
-    def preprocess(self, image: np.ndarray):
+    def preprocess(self, image: np.ndarray, name, orientations):
+        if self.orientations is not None:
+            if name in self.orientations:
+                image = rotate_image(image,self.orientations[name])
+
         image = image.astype(np.float32, copy=False)
         size = image.shape[:2][::-1]
         scale = np.array([1.0, 1.0])
@@ -225,8 +234,8 @@ class ImagePairDataset(torch.utils.data.Dataset):
         else:
             image0 = read_image(self.image_dir / name0, self.conf.grayscale)
             image1 = read_image(self.image_dir / name1, self.conf.grayscale)
-            image0, scale0 = self.preprocess(image0)
-            image1, scale1 = self.preprocess(image1)
+            image0, scale0 = self.preprocess(image0, name0, self.orientations)
+            image1, scale1 = self.preprocess(image1, name1, self.orientations)
         return image0, image1, scale0, scale1, name0, name1
 
 
@@ -235,13 +244,14 @@ def match_dense(conf: Dict,
                 pairs: List[Tuple[str, str]],
                 image_dir: Path,
                 match_path: Path,  # out
+                orientations: Optional[dict] = None,
                 existing_refs: Optional[List] = []):
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     Model = dynamic_load(matchers, conf['model']['name'])
     model = Model(conf['model']).eval().to(device)
 
-    dataset = ImagePairDataset(image_dir, conf["preprocessing"], pairs)
+    dataset = ImagePairDataset(image_dir, conf["preprocessing"], pairs, orientations)
     loader = torch.utils.data.DataLoader(
             dataset, num_workers=2, batch_size=1, shuffle=False)
 
@@ -454,7 +464,9 @@ def match_and_assign(conf: Dict,
                      feature_path_q: Path,  # out
                      feature_paths_refs: Optional[List[Path]] = [],
                      max_kps: Optional[int] = 8192,
-                     overwrite: bool = False) -> Path:
+                     overwrite: bool = False, 
+                     orientations: Optional[dict] = None) -> Path:
+    
     for path in feature_paths_refs:
         if not path.exists():
             raise FileNotFoundError(f'Reference feature file {path}.')
@@ -482,7 +494,7 @@ def match_and_assign(conf: Dict,
         return
 
     # extract semi-dense matches
-    match_dense(conf, pairs, image_dir, match_path,
+    match_dense(conf, pairs, image_dir, match_path, orientations, 
                 existing_refs=existing_refs)
 
     logger.info("Assigning matches...")
@@ -514,7 +526,8 @@ def main(conf: Dict,
          features: Optional[Path] = None,  # out
          features_ref: Optional[Path] = None,
          max_kps: Optional[int] = 8192,
-         overwrite: bool = False) -> Path:
+         overwrite: bool = False,
+         orientations: Optional[dict] = None) -> Path:
     logger.info('Extracting semi-dense features with configuration:'
                 f'\n{pprint.pformat(conf)}')
 
@@ -547,7 +560,7 @@ def main(conf: Dict,
 
     match_and_assign(conf, pairs, image_dir, matches,
                      features_q, features_ref,
-                     max_kps, overwrite)
+                     max_kps, overwrite, orientations)
 
     return features_q, matches
 
