@@ -41,6 +41,31 @@ confs = {
         'model': {
             'name': 'adalam'
         },
+    }, 
+    
+    'superglue': {
+        'output': 'matches-superglue',
+        'model': {
+            'name': 'superglue',
+            'weights': 'outdoor',
+            'sinkhorn_iterations': 50,
+        },
+    },
+    'superglue-fast': {
+        'output': 'matches-superglue-it5',
+        'model': {
+            'name': 'superglue',
+            'weights': 'outdoor',
+            'sinkhorn_iterations': 5,
+        },
+    },
+    'NN-superpoint': {
+        'output': 'matches-NN-mutual-dist.7',
+        'model': {
+            'name': 'nearest_neighbor',
+            'do_mutual_check': True,
+            'distance_threshold': 0.7,
+        },
     }
 }
 
