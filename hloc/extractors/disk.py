@@ -13,8 +13,8 @@ from disk import DISK as _DISK  # noqa E402
 
 class DISK(BaseModel):
     default_conf = {
-        # 'model_name': 'depth-save.pth',
-        'model_name': 'epipolar-save.pth',
+        'model_name': 'depth-save.pth',
+        # 'model_name': 'epipolar-save.pth',
         'max_keypoints': None,
         'desc_dim': 128,
         'mode': 'nms',
