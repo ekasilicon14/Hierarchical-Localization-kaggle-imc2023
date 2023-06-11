@@ -122,11 +122,11 @@ confs = {
         'output': 'feats-disk',
         'model': {
             'name': 'disk',
-            'max_keypoints': 10000,
+            'max_keypoints': 8000,
         },
         'preprocessing': {
             'grayscale': False,
-            'resize_max': 1600,
+            'resize_max': 1024,
         },
     },
 
