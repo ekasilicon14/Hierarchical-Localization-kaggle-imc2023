@@ -26,7 +26,7 @@ confs = {
         'model': {
             'name': 'nearest_neighbor',
             'do_mutual_check': True,
-            'ratio_threshold': 0.8,
+            'ratio_threshold': 0.95,
         }
     },
     'NN-mutual': {

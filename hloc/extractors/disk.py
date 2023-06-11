@@ -6,14 +6,15 @@ import torch.nn.functional as F
 
 from ..utils.base_model import BaseModel
 
-disk_path = Path(__file__).parent / "../../third_party/disk"
+# disk_path = Path(__file__).parent / "../../third_party/disk"
+disk_path = Path('/kaggle/input/disk-model')
 sys.path.append(str(disk_path))
 from disk import DISK as _DISK  # noqa E402
 
-
 class DISK(BaseModel):
     default_conf = {
-        'model_name': 'depth-save.pth',
+        # 'model_name': 'depth-save.pth',
+        'model_name': 'epipolar-save.pth',
         'max_keypoints': None,
         'desc_dim': 128,
         'mode': 'nms',
