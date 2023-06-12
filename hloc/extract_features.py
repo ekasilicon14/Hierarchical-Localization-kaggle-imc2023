@@ -96,6 +96,16 @@ confs = {
             'resize_max': 1600,
         },
     },
+    'rootsift': {
+        'output': 'feats-rootsift',
+        'model': {
+            'name': 'dog'
+        },
+        'preprocessing': {
+            'grayscale': True,
+            'resize_max': 1600,
+        },
+    },
     'sosnet': {
         'output': 'feats-sosnet',
         'model': {
