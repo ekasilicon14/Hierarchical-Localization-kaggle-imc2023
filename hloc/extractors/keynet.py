@@ -34,6 +34,7 @@ class KeyNetAffNetHardNetLayers(KF.LocalFeature):
         descriptor = KF.LAFDescriptor(hardnet, patch_size=32, grayscale_descriptor=True).to(device)
         super().__init__(detector, descriptor, scale_laf)
 
+
 class KeyNetAffNetHardNet(BaseModel):
     default_conf = {
         'max_keypoints': 10000,
