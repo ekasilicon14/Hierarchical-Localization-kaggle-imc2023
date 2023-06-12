@@ -96,6 +96,16 @@ confs = {
             'resize_max': 1600,
         },
     },
+    'rootsift': {
+        'output': 'feats-rootsift',
+        'model': {
+            'name': 'dog'
+        },
+        'preprocessing': {
+            'grayscale': True,
+            'resize_max': 1600,
+        },
+    },
     'sosnet': {
         'output': 'feats-sosnet',
         'model': {
@@ -115,18 +125,18 @@ confs = {
         },
         'preprocessing': {
             'grayscale': False,
-            'resize_max': 1650,
+            'resize_max': 1600,
         },
     },
     'disk': {
         'output': 'feats-disk',
         'model': {
             'name': 'disk',
-            'max_keypoints': 10000,
+            'max_keypoints': 8000,
         },
         'preprocessing': {
             'grayscale': False,
-            'resize_max': 1600,
+            'resize_max': 1024,
         },
     },
 
